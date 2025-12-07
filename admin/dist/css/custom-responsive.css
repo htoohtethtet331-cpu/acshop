@@ -1,0 +1,245 @@
+/* custom-responsive.css
+   - place after adminlte.min.css
+   - Mobile-first, responsive tweaks for your blog listing page
+*/
+
+/* --- Variables & base --- */
+:root{
+  --primary:#007bff;
+  --muted:#6c757d;
+  --bg:#f8f9fa;
+  --card-bg:#ffffff;
+  --radius:10px;
+  --gap:12px;
+  --max-width:1100px;
+  --sidebar-width:260px;
+}
+
+/* Reset tweaks */
+body {
+  font-family: "Source Sans Pro", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: var(--bg);
+  color: #222;
+  line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* Center content and control width */
+.wrapper .content-wrapper {
+  max-width: var(--max-width);
+  margin: 16px auto;
+  padding: 0 12px 40px;
+}
+
+/* Card / container visual polish */
+.card {
+  background: linear-gradient(180deg, var(--card-bg), #fcfcfd);
+  border-radius: var(--radius);
+  box-shadow: 0 6px 18px rgba(20,20,40,0.06);
+  overflow: hidden;
+  border: 0;
+}
+
+/* Card header style */
+.card .card-header {
+  padding: 14px 18px;
+  background: transparent;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+.card .card-title {
+  font-size: 1.05rem;
+  font-weight:600;
+}
+
+/* Buttons */
+.btn {
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-weight:600;
+  letter-spacing:0.2px;
+  box-shadow:none;
+}
+.btn.btn-success {
+  background: var(--primary);
+  border: 1px solid rgba(0,0,0,0.03);
+  color: #fff;
+}
+.btn.btn-warning { background:#ffc107; color:#111; }
+.btn.btn-danger  { background:#e55353; color:#fff; }
+
+/* Top navbar compact */
+.main-header.navbar {
+  padding: 6px 12px;
+  box-shadow: 0 2px 8px rgba(20,20,40,0.04);
+  background:#ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 60;
+}
+
+/* Brand */
+.brand-link {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+}
+.brand-image { width:36px; height:36px; object-fit:cover; }
+
+/* Sidebar tweaks */
+.main-sidebar {
+  background: linear-gradient(180deg,#0f1724, #0b1220);
+  color:#fff;
+  min-height:100vh;
+  width:var(--sidebar-width);
+  border-right:0;
+}
+.main-sidebar .brand-text { color:#fff; font-weight:700; }
+.user-panel .info a { color:#fff; font-weight:600; }
+
+/* Sidebar links */
+.nav-sidebar .nav-link {
+  color: rgba(255,255,255,0.9);
+  border-radius:8px;
+  margin:4px 6px;
+  padding:8px 10px;
+}
+.nav-sidebar .nav-link .nav-icon { width:22px; }
+
+
+
+/* Table styling */
+.table-responsive { overflow:hidden; border-radius:8px; }
+.table {
+  width:100%;
+  border-collapse:collapse;
+  background:transparent;
+}
+.table th, .table td {
+  padding: 12px 14px;
+  vertical-align: middle;
+  border-top: 1px solid rgba(0,0,0,0.04);
+  font-size:0.95rem;
+}
+
+/* Table header */
+.table thead th {
+  background: rgba(250,250,252,0.6);
+  font-weight:700;
+  font-size:0.92rem;
+  color:#333;
+}
+
+/* Truncate content column */
+.table td[data-label="Content"] {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 240px;
+}
+
+/* Actions: group buttons neatly */
+.btn-group .container { display:inline-block; margin-right:6px; }
+.btn-group .btn { padding:6px 10px; font-size:0.88rem; }
+
+/* Pagination center & touch-friendly */
+.pagination { display:flex; gap:8px; justify-content:center; padding:8px 6px; }
+.page-link { padding:8px 12px; border-radius:8px; }
+
+/* Small visual helpers */
+.container-fluid .row-md-12 { padding:0; }
+
+/* --- Responsive: Mobile-first rules --- */
+
+/* default: mobile layout (single column)
+   Hide sidebar visually and make header contain quick actions
+*/
+@media (max-width: 991px) {
+  .main-sidebar { position: fixed; left: -320px; top:0; height:100vh; z-index:70; transition: left .28s ease; width:85%; max-width:320px; box-shadow: 4px 0 16px rgba(10,10,30,0.2); }
+  /* when adminlte pushmenu toggles a class, sidebar will appear; add an alternative :focus-within helper for accessibility */
+  body.sidebar-open .main-sidebar { left:0; }
+
+  /* Make wrapper take full width */
+  .wrapper .content-wrapper { margin: 64px 12px 24px; padding: 0; }
+
+  /* compact header */
+  .main-header .form-inline { display:none; } /* remove search on small screens to reduce clutter */
+  .main-header .navbar-nav { display:flex; gap:8px; align-items:center; }
+
+  /* Brand smaller */
+  .brand-link .brand-text { font-size:0.95rem; }
+
+  /* Card spacing */
+  .card { margin-bottom: 14px; }
+
+  /* Table becomes stacked card style (enhance your existing stacked rules) */
+  .table-responsive table { border:0; }
+  .table-responsive thead { display:none; }
+  .table-responsive tr {
+    display:block;
+    margin-bottom:12px;
+    background:#fff;
+    padding:10px;
+    border-radius:10px;
+    box-shadow:0 6px 16px rgba(20,20,40,0.04);
+  }
+  .table-responsive td {
+    display:flex;
+    justify-content:space-between;
+    padding:8px 12px;
+    border-bottom:none;
+    text-align:right;
+  }
+  .table-responsive td::before {
+    content: attr(data-label);
+    font-weight:700;
+    text-transform:capitalize;
+    text-align:left;
+    flex: 0 0 48%;
+    color:var(--muted);
+  }
+  .table-responsive td[data-label="Actions"] { padding-top:6px; }
+  .table-responsive td[data-label="#"] { font-weight:700; }
+
+  /* Buttons full width inside actions for easier tapping */
+  .btn-group .btn { display:inline-block; min-width:110px; text-align:center; padding:8px 10px; }
+
+  /* Pagination touch targets */
+  .pagination .page-link { padding:10px 12px; min-width:48px; text-align:center; }
+
+  /* small avatars */
+  .user-panel .image img { width:36px; height:36px; }
+}
+
+/* Medium screens - keep content centered and sidebar visible */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .wrapper .content-wrapper { max-width: 920px; }
+  .table-responsive td[data-label="Content"] { max-width:320px; }
+}
+
+/* Large screens: keep normal desktop layout */
+@media (min-width: 1200px) {
+  .wrapper { padding-left: 260px; } /* leave space for sidebar visually */
+  .main-sidebar { position: fixed; top:0; left:0; height:100vh; }
+  .content-wrapper { margin-left: 0; }
+}
+
+/* Accessibility: focus states */
+a:focus, button:focus {
+  outline: 3px solid rgba(0,123,255,0.18);
+  outline-offset:3px;
+  border-radius:6px;
+}
+
+/* Tiny utilities */
+.text-muted { color:var(--muted) !important; font-size:0.9rem; }
+.small { font-size:0.85rem; }
+
+/* Improve link appearance in table on mobile */
+.table-responsive a { display:inline-block; }
+
+/* If you'd like to force-break long words (URLs etc) */
+.break-word { word-break: break-word; hyphens:auto; }
+
+/* End of custom-responsive.css */
