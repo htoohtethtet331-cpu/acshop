@@ -39,42 +39,7 @@ if(empty($_SESSION['user_id'])|| empty($_SESSION['logged_in'])){
                 <h3 class="card-title"> Listing </h3>
               </div>
               <!-- /.card-header -->
-               <?php 
-              if(!empty($_GET['pageno'])){
-                $pageno = $_GET['pageno'];
-              }else{
-                $pageno = 1;
-              }
-              $numberOfrec = 5;
-              $offset = ($pageno - 1) * $numberOfrec;
-              
 
-if(empty($_POST['search']) && empty($_COOKIE['search'])){
-  
-               $stmt = $pdo->prepare("SELECT * FROM posts Order by id DESC");
-               $stmt -> execute();
-               $Rawresult = $stmt->fetchAll();
-              $totalpages = ceil(count($Rawresult)/$numberOfrec);
-
-              $stmt = $pdo->prepare("SELECT * From posts Order by id desc LIMIT $offset,$numberOfrec");
-              $stmt->execute();
-              $result = $stmt->fetchAll();
-             
-}else{
-             $searchKey = $_POST['search'] ? $_POST['search'] : $_COOKIE['search'];
-
-               $stmt = $pdo->prepare("SELECT * FROM posts Where title like '%$searchKey%' Order by id DESC");
-             
-               $stmt -> execute();
-               $Rawresult = $stmt->fetchAll();
-              $totalpages = ceil(count($Rawresult)/$numberOfrec);
-
-              $stmt = $pdo->prepare("SELECT * From posts WHERE title LIKE '%$searchKey%'  Order by id desc LIMIT $offset,$numberOfrec");
-              $stmt->execute();
-              $result = $stmt->fetchAll();
-             
-}
-               ?>
               <div class="card-body">
                 <div>
                 <a href="add.php" type="button" class="btn btn-success">+</a>
@@ -93,53 +58,14 @@ if(empty($_POST['search']) && empty($_COOKIE['search'])){
                       </tr>
                     </thead>
                     <tbody>
-             <?php 
-             $i=1;
-             if($result){
-              foreach ($result as $value) {
-                ?>
-
-                         <tr>
-                        <td data-label="#"><?php echo $i;?></td>
-                        <td data-label="Title"><?php echo escape ($value['title']) ?></td>
-                        <td data-label="Content"><?php echo  escape(substr($value['content'],0,50)) ?></td>
-                        <td data-label="Actions">
-                          <div class="container">   
-                            <div class="btn-group">          
-                              <div class="container"> <a href="edit.php?id=<?php echo $value['id'] ?>" type="button" class="btn btn-warning">Edit</a></div>
-                              <div class="container" onclick = "return confirm(`Are you Sure to delete this content`)"> <a href="delete.php?id=<?php echo $value['id'] ?>" type="button" class="btn btn-danger">Delete</a></div>
-                            </div>
-                          </div>     
-                        </td>
-                      </tr>
-            <?php
-            $i++;
-             }
-             }
-             ?>
+          
                     
                   </tbody>
                   </table>
                 </div>
                 <br>
 
-                <nav aria-label="Page navigation example">
-  <ul class="pagination">
-    <li class="page-item"><a class="page-link" href="<?php echo '?pageno=1' ?>">First</a></li>
-
-    <li class="page-item<?php if($pageno<=0){echo 'error';} ?>"><a class="page-link
-    
-    
-    " href="<?php if($pageno > 1){echo'?pageno='.$pageno-1 ;}else{echo '#';}?>">previous</a></li>
-
-    <li class="page-item"><a class="page-link" href="#"><?php echo $pageno ?></a></li>
-
-    <li class="page-item<?php if($pageno >= $totalpages){echo 'disabled';}?>"><a class="page-link" href="<?php if($pageno <  $totalpages  ){echo'?pageno='.$pageno+1 ;}else{echo '#';}?>">Next</a></li>
-
-    <li class="page-item"><a class="page-link" href="?pageno=<?php echo $totalpages?>">Last</a></li>
-  </ul>
-</nav>
- 
+             
 
 
  

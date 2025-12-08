@@ -7,19 +7,11 @@ require "../config/common.php";
 
 if(empty($_SESSION['user_id'])|| empty($_SESSION['logged_in'])){
   header("Location: login.php");
-
+}
 
 
   
-    if(!empty($_POST['search'])){
-        setcookie('search', $_POST['search'], time() + (86400 * 30), "/"); // 86400 = 1 day
-    }else{
-     if(empty($_GET['pageno'])){
-        unset($_COOKIE['search']);
-        setcookie('search', null, -1, "/");
-     }
-    }
-};
+
 ?>
 
 <?php include "header.php"?>
@@ -36,10 +28,10 @@ if(empty($_SESSION['user_id'])|| empty($_SESSION['logged_in'])){
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title"> Listing </h3>
+                <h3 class="card-title">Categories Listing </h3>
               </div>
               <!-- /.card-header -->
-             <?php 
+<?php 
               if(!empty($_GET['pageno'])){
                 $pageno = $_GET['pageno'];
               }else{
@@ -49,35 +41,23 @@ if(empty($_SESSION['user_id'])|| empty($_SESSION['logged_in'])){
               $offset = ($pageno - 1) * $numberOfrec;
               
 
-if(empty($_POST['search']) && empty($_COOKIE['search'])){
   
-               $stmt = $pdo->prepare("SELECT * FROM products Order by id DESC");
+               $stmt = $pdo->prepare("SELECT * FROM sale_orders Order by id DESC");
                $stmt -> execute();
                $Rawresult = $stmt->fetchAll();
               $totalpages = ceil(count($Rawresult)/$numberOfrec);
 
-              $stmt = $pdo->prepare("SELECT * From products Order by id desc LIMIT $offset,$numberOfrec");
+              $stmt = $pdo->prepare("SELECT * From sale_orders Order by id desc LIMIT $offset,$numberOfrec");
               $stmt->execute();
               $result = $stmt->fetchAll();
              
-}else{
-             $searchKey = $_POST['search'] ? $_POST['search'] : $_COOKIE['search'];
 
-               $stmt = $pdo->prepare("SELECT * FROM products Where name like '%$searchKey%' Order by id DESC");
              
-               $stmt -> execute();
-               $Rawresult = $stmt->fetchAll();
-              $totalpages = ceil(count($Rawresult)/$numberOfrec);
 
-              $stmt = $pdo->prepare("SELECT * From products WHERE name LIKE '%$searchKey%'  Order by id desc LIMIT $offset,$numberOfrec");
-              $stmt->execute();
-              $result = $stmt->fetchAll();
-             
-}
                ?>
               <div class="card-body">
                 <div>
-                <a href="product_add.php" type="button" class="btn btn-success">Create New Product</a>
+                <a href="cat_add.php" type="button" class="btn btn-success">add new categories</a>
 
 
               </div>
@@ -87,46 +67,33 @@ if(empty($_POST['search']) && empty($_COOKIE['search'])){
                     <thead>                  
                       <tr>
                         <th style="width: 10px">#</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>category</th>
-                        <th>In stock</th>
-                        <th>Price</th>
-                        <th style="width: 40px">Actions</th>
+                        <th>User</th>
+                        <th>Total Price</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
                       </tr>
                     </thead>
-                    <tbody>
-   <?php 
+                    <tbody>             <?php 
              $i=1;
              if($result){
               foreach ($result as $value) {
                 ?>
-                <?php 
-                $catstmt = $pdo->prepare("SELECT * From categories WHERE id=".$value['category_id']);
-              $catstmt->execute();
-              $catResult = $catstmt->fetchAll();
-              
-                ?>
-
+<?php
+ $userstmt = $pdo->prepare("SELECT * From users WHERE id=".$value['user_id']);
+              $userstmt->execute();
+              $userResult = $userstmt->fetchAll();
+?>
                          <tr>
                         <td><?php echo $i;?></td>
-                        <td><?php echo escape ($value['name']) ?></td>
-                        <td><?php echo  escape(substr($value['description'],0,30)) ?></td>
-                        <td><?php echo  escape($catResult[0]['name'] )?></td>
-                        <td><?php echo  escape($value['quantity']) ?></td>  
-                        <td><?php echo  escape($value['price'])?></td>
+                        <td><?php echo escape ($userResult[0]['name']) ?></td>
+                        <td><?php echo  escape ($value['total_price'])?></td>
+                        <td><?php echo  escape(date('Y-m-d',strtotime($value['order_date']))) ?></td>
                         <td>
-                          <div class="btn-group">
-                              <div class="container">
-                                <a href="product_edit.php?id=<?php echo $value['id']?>" type="button" class="btn btn-warning">Edit</a>
-                              </div>
-                              <div class="container">
-                                <a href="product_delete.php?id=<?php echo $value['id']?>"
-                                  onclick="return confirm('Are you sure you want to delete this item')"
-                                  type="button" class="btn btn-danger">Delete</a>
-                              </div>
+                          <div class="container">   
+                            <div class="btn-group">          
+                              <div class="container"> <a href="order_detail.php?id=<?php echo $value['id'] ?>" type="button" class="btn btn-warning">Detail</a></div>
                             </div>
-
+                          </div>     
                         </td>
                       </tr>
             <?php
@@ -134,13 +101,13 @@ if(empty($_POST['search']) && empty($_COOKIE['search'])){
              }
              }
              ?>
+
                     
                   </tbody>
                   </table>
                 </div>
                 <br>
-
-    <nav aria-label="Page navigation example">
+                <nav aria-label="Page navigation example">
   <ul class="pagination">
     <li class="page-item"><a class="page-link" href="<?php echo '?pageno=1' ?>">First</a></li>
 
@@ -156,6 +123,7 @@ if(empty($_POST['search']) && empty($_COOKIE['search'])){
     <li class="page-item"><a class="page-link" href="?pageno=<?php echo $totalpages?>">Last</a></li>
   </ul>
 </nav>
+
  
 
 

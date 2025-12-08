@@ -1,9 +1,10 @@
 <?php 
+session_start();
 require "../config/config.php";
 require "../config/common.php";
 
 
-if(empty($_SESSION['user_id'] || $_SESSION['role'] != 1 || $_SESSION['logged_in'])){
+if(empty($_SESSION['user_id']) ||  empty($_SESSION['logged_in'])){
   header("Location: login.php");
   exit();
 };

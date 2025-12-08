@@ -33,7 +33,7 @@
         $link_array = explode('/',$link);
         $page = end($link_array);
     ?>
-
+<?php if($page != 'order_list.php') { ?>
     <form class="form-inline ml-3" method="post" 
     <?php if($page == "index.php") :?>
       <?php echo "action = 'index.php'" ?>
@@ -44,6 +44,7 @@
       <?php endif ; ?>
       
       >
+     
 
       <div class="input-group input-group-sm">
         <input type="hidden" name="_token" value="<?php echo $_SESSION['_token']; ?>">
@@ -57,7 +58,7 @@
       </div>
     </form>
 
-
+ <?php } ?>
   </nav>
   <!-- /.navbar -->
 
@@ -109,6 +110,14 @@
               <i class="nav-icon fas fa-list"></i>
               <p>
                 users
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="order_list.php" class="nav-link">
+              <i class="nav-icon fas fa-table"></i>
+              <p>
+                Orders
               </p>
             </a>
           </li>
