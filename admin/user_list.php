@@ -54,7 +54,10 @@ if (!empty($_POST['search'])) {
                   $stmt->execute();
                   $result = $stmt->fetchAll();
                 }else{
-                  $searchKey = $_POST['search'] ? $_POST['search'] : $_COOKIE['search'];
+                  try {
+                  
+                 
+                 $searchKey = isset($_POST['search']) ? $_POST['search'] : $_COOKIE['search'] ;
                   $stmt = $pdo->prepare("SELECT * FROM users WHERE name LIKE '%$searchKey%' ORDER BY id DESC");
                   $stmt->execute();
                   $rawResult = $stmt->fetchAll();
@@ -64,8 +67,10 @@ if (!empty($_POST['search'])) {
                   $stmt = $pdo->prepare("SELECT * FROM users WHERE name LIKE '%$searchKey%' ORDER BY id DESC LIMIT $offset,$numOfrecs");
                   $stmt->execute();
                   $result = $stmt->fetchAll();
+                   } catch (Exception $e) {
+                        echo "Error ဖြစ်ပြီ: " . $e->getMessage();
+                  }
                 }
-
               ?>
               <!-- /.card-header -->
               <div class="card-body">

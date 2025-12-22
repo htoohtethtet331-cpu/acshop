@@ -1,112 +1,120 @@
+<?php
+session_start();
+require "config/config.php";
+require "config/common.php";
+
+
+if(empty($_SESSION['user_id']) || empty($_SESSION['logged_in'])){
+	
+	header("location: login.php");
+	exit();
+}
+?>
+
 <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
-<html lang="en">
+<html lang="zxx" class="no-js">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
+	<!-- Mobile Specific Meta -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Favicon-->
+	<link rel="shortcut icon" href="img/fav.png">
+	<!-- Author Meta -->
+	<meta name="author" content="CodePixar">
+	<!-- Meta Description -->
+	<meta name="description" content="">
+	<!-- Meta Keyword -->
+	<meta name="keywords" content="">
+	<!-- meta character set -->
+	<meta charset="UTF-8">
+	<!-- Site Title -->
+	<title>A Coder Shop</title>
 
-  <title>Blog | Starter</title>
-
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="../plugins/fontawesome-free/css/all.min.css">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="../dist/css/adminlte.min.css">
-  <!-- Google Font: Source Sans Pro -->
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+	<!--
+            CSS
+            ============================================= -->
+	<link rel="stylesheet" href="css/linearicons.css">
+	<link rel="stylesheet" href="css/owl.carousel.css">
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/themify-icons.css">
+	<link rel="stylesheet" href="css/nice-select.css">
+	<link rel="stylesheet" href="css/nouislider.min.css">
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/main.css">
 </head>
-<body class="hold-transition sidebar-mini">
-<div class="wrapper">
 
-  <!-- Navbar -->
-  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-    <!-- Left navbar links -->
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-      </li>
-    </ul>
+<body id="category">
 
-    <!-- SEARCH FORM -->
-    <?php
-        $link = $_SERVER['PHP_SELF'];
-        $link_array = explode('/',$link);
-        $page = end($link_array);
-    ?>
+	<!-- Start Header Area -->
+	<header class="header_area sticky-header">
+		<div class="main_menu">
+			<nav class="navbar navbar-expand-lg navbar-light main_box">
+				<div class="container">
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<a class="navbar-brand logo_h" href="index.php"><h4><img src="admin/image/image.png" style="padding : 10px" Weight="100" height="90"><h4></a>
+					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+					 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<!-- Collect the nav links, forms, and other content for toggling -->
+					<div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+						<ul class="nav navbar-nav navbar-right">
+							<?php 
+							$cart = 0 ;
+							if(isset($_SESSION['cart']))
+								{
+									foreach ($_SESSION['cart'] as $key => $qty) {
+										$cart += $qty;
+									}}?>
 
-    <form class="form-inline ml-3" method="post" action="<?php echo $page == 'index.php' ? 'index.php':'user_list.php';?>">
+							<li class="nav-item"><a href="cart.php" class="cart"><span class="ti-bag"></span><?php echo $cart ?></a></li>
+							
+							
+							<li class="nav-item">
+								<button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
+							</li>
+							<style>
+								.sign{
+									margin-top : 25px
+									
+								}
+							</style>
+							<li class="nav-item">
+								<div class="sign"><a href="logout.php" class="sign-out"><i class="fa fa-sign-out" aria-hidden="true"></i></a></div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+		</div>
+		<div class="search_input" id="search_input_box">
+			<div class="container">
+				<form action="index.php" method="post" class="d-flex justify-content-between">
+					<input type="text" name="search" class="form-control" id="search_input" placeholder="Search Here">
+					<input type="hidden" name="_token" value="<?php echo $_SESSION['_token']; ?>">
+					<button type="submit" class="btn"></button>
+					<span class="lnr lnr-cross" id="close_search" title="Close Search"></span>
+				</form>
+			</div>
+		</div>
+	</header>
+	<!-- End Header Area -->
 
-      <div class="input-group input-group-sm">
-        <input name="search" class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-        <div class="input-group-append">
-          <button class="btn btn-navbar" type="submit">
-            <i class="fas fa-search"></i>
-          </button>
-        </div>
-      </div>
-    </form>
+	<!-- Start Banner Area -->
+	<section class="banner-area organic-breadcrumb">
+		<div class="container">
+			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+				<div class="col-first">
+					<h1>Welcome <?php 
+						echo escape($_SESSION['user_name'])
+				?> </h1>
 
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Banner Area -->
 
-  </nav>
-  <!-- /.navbar -->
-
-  <!-- Main Sidebar Container -->
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
-      <img src="../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-           style="opacity: .8">
-      <span class="brand-text font-weight-light">Blog Panel</span>
-    </a>
-
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <!-- Sidebar user panel (optional) -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="../dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
-        </div>
-        <div class="info">
-          <a href="#" class="d-block"><?php echo $_SESSION['username']?></a>
-        </div>
-      </div>
-
-      <!-- Sidebar Menu -->
-      <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-
-          <li class="nav-item">
-            <a href="index.php" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
-              <p>
-                Blogs
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="user_list.php" class="nav-link">
-              <i class="nav-icon fas fa-user"></i>
-              <p>
-                Users
-              </p>
-            </a>
-          </li>
-        </ul>
-      </nav>
-      <!-- /.sidebar-menu -->
-    </div>
-    <!-- /.sidebar -->
-  </aside>
-
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-
-    </div>
-    <!-- /.content-header -->
+			

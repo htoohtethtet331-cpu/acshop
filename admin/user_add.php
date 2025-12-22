@@ -1,281 +1,118 @@
-
-
 <?php
-
 session_start();
 require '../config/config.php';
-require "../config/common.php";
-if(empty($_SESSION['user_id'] || $_SESSION['role'] != 1 || $_SESSION['logged_in'])){
-  header("Location: login.php");
-  exit();
-};
-if($_POST){
-    if (empty($_POST['name']) || empty($_POST['email']) || empty($_POST['password']) ||  strlen($_POST['password']) < 4){
+require '../config/common.php';
+
+if (empty($_SESSION['user_id']) && empty($_SESSION['logged_in'])) {
+  header('Location: /admin/login.php');
+}
+if ($_SESSION['role'] != 1) {
+  header('Location: /admin/login.php');
+}
+
+if ($_POST) {
+  if (empty($_POST['name']) || empty($_POST['email']) || empty($_POST['phone']) || empty($_POST['address']) || empty($_POST['password']) || strlen($_POST['password']) < 4) {
     if (empty($_POST['name'])) {
-      $nameError = 'Title cannot be null';
+      $nameError = 'Name cannot be null';
     }
     if (empty($_POST['email'])) {
-      $emailError = 'Content cannot be null';
+      $emailError = 'Email cannot be null';
     }
-    if(empty($_POST['password'])){
-        $passwordError = 'Password cannot be null';
+    if (empty($_POST['phone'])) {
+      $phoneError = 'Phone cannot be null';
     }
-                if(strlen($_POST['password']) < 4)  {
-               $passwordError = 'Password was be more than 4 character';
- 
+    if (empty($_POST['address'])) {
+      $addressError = 'Address cannot be null';
     }
-  
+    if (empty($_POST['password'])) {
+      $passwordError = 'Password cannot be null';
+    }
+    if(strlen($_POST['password']) < 4){
+      $passwordError = 'Password should be 4 characters at least';
+    }
   }else{
     $name = $_POST['name'];
-    $password = password_hash($_POST['password'],PASSWORD_DEFAULT);
     $email = $_POST['email'];
-    $role = $_POST['role'];
+    $phone = $_POST['phone'];
+    $address = $_POST['address'];
+    $password = password_hash($_POST['password'],PASSWORD_DEFAULT);
 
-    
-    $stmt=$pdo->prepare("INSERT INTO users(name,password,email,role)VALUES (:name,:password,:email,:role)");
-   $result = $stmt->execute(
-        [':name'=> $name,':password'=>$password,':email'=>$email,':role'=>$role]
-    );
-    
-    if($result){
-    echo "<script>alert('user is successfully add');window.location.href='user_list.php';</script>";
-    }}
-}?>
+    if (empty($_POST['role'])) {
+      $role = 0;
+    }else{
+      $role = 1;
+    }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: #f5f7fb;
-            color: #333;
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .header {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .header h1 {
-            font-size: 1.8rem;
-            color: #343a40;
-        }
-        
-        .btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 500;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary {
-            background-color: #4a6fa5;
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background-color: #3a5a8a;
-        }
-        
-        .btn-danger {
-            background-color: #dc3545;
-            color: white;
-        }
-        
-        .btn-warning {
-            background-color: #ffc28cff;
-            color: #343a40;
-        }
-        
-        .btn-sm {
-            padding: 5px 10px;
-            font-size: 0.8rem;
-        }
-        
-        .card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-        
-        .card-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .card-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #343a40;
-        }
-        
-        .card-body {
-            padding: 20px;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-        
-        th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-            color: #343a40;
-        }
-        
-        tr:hover {
-            background-color: rgba(0, 0, 0, 0.02);
-        }
-        
-        .status {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-        
-        .status-active {
-            background-color: rgba(40, 167, 69, 0.1);
-            color: #28a745;
-        }
-        
-        .status-inactive {
-            background-color: rgba(220, 53, 69, 0.1);
-            color: #dc3545;
-        }
-        
-        .actions {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-        
-        .form-control:focus {
-            outline: none;
-            border-color: #4a6fa5;
-            box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.2);
-        }
-        
-        .search-box {
-            width: 250px;
-        }
-        
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .header-actions {
-                margin-top: 10px;
-                width: 100%;
-            }
-            
-            .search-box {
-                width: 100%;
-            }
-            
-            .table-container {
-                overflow-x: auto;
-            }
-        }
-    </style>
-<body>
-     <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">Add New User</h2>
-            </div>
-            <div class="card-body">
-                <form action="user_add.php" method="post">
-                             <input type="hidden" name="_token" value="<?php echo $_SESSION['_token']; ?>">
-    
-                <div class="form-group">
-                        <label for="username">Username</label><p style="color :red "><?php echo empty($nameError) ? '' : '*'.$nameError; ?></p>
-                        <input type="text" name="name" id="username" class="form-control"  placeholder="Enter username">
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label><p style="color :red "><?php echo empty($emailError) ? '' : '*'.$emailError; ?></p>
-                        <input name="email" type="email" id="email" class="form-control"  placeholder="Enter email">
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label><p style="color :red "><?php echo empty($passwordError) ? '' : '*'.$passwordError; ?></p>
-                        <input name="password" type="password" id="password" class="form-control"  placeholder="Enter password">
-                    </div>
-                    <div class="form-group">
-                        <label for="role">Role</label>
-                        <select id="role" name="role" class="form-control">
-                            <option value="0">Users</option>
-                            <option value="1">Administrator</option>
-                        </select>
-                    </div>
-                  
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email=:email");
 
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Save User</button>
-                        <a type="button" class='btn btn-warning' href="user_list.php">BACK</a>
-                    </div>
+    $stmt->bindValue(':email',$email);
+    $stmt->execute();
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user) {
+      echo "<script>alert('Email duplicated')</script>";
+    }else{
+      $stmt = $pdo->prepare("INSERT INTO users(name,email,password,role,phone,address) VALUES (:name,:email,:password,:role,:phone,:address)");
+      $result = $stmt->execute(
+          array(':name'=>$name,':email'=>$email,':password'=>$password,':role'=>$role,':phone'=>$phone,':address'=>$address)
+      );
+      if ($result) {
+        echo "<script>alert('Successfully added');window.location.href='user_list.php';</script>";
+      }
+    }
+  }
+}
+
+?>
+
+
+<?php include('header.php'); ?>
+    <!-- Main content -->
+    <div class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-body">
+                <form class="" action="user_add.php" method="post" enctype="multipart/form-data">
+                  <input name="_token" type="hidden" value="<?php echo $_SESSION['_token']; ?>">
+
+                  <div class="form-group">
+                    <label for="">Name</label><p style="color:red"><?php echo empty($nameError) ? '' : '*'.$nameError; ?></p>
+                    <input type="text" class="form-control" name="name" value="" >
+                  </div>
+                  <div class="form-group">
+                    <label for="">Email</label><p style="color:red"><?php echo empty($emailError) ? '' : '*'.$emailError; ?></p>
+                    <input type="email" class="form-control" name="email" value="">
+                  </div>
+                  <div class="form-group">
+                    <label for="">Phone</label><p style="color:red"><?php echo empty($phoneError) ? '' : '*'.$phoneError; ?></p>
+                    <input type="text" class="form-control" name="phone" value="" >
+                  </div>
+                  <div class="form-group">
+                    <label for="">Address</label><p style="color:red"><?php echo empty($addressError) ? '' : '*'.$addressError; ?></p>
+                    <input type="text" class="form-control" name="address" value="" >
+                  </div>
+                  <div class="form-group">
+                    <label for="">Password</label><p style="color:red"><?php echo empty($passwordError) ? '' : '*'.$passwordError; ?></p>
+                    <input type="password" name="password" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label for="vehicle3"> Admin</label><br>
+                    <input type="checkbox" name="role" value="1">
+                  </div>
+                  <div class="form-group">
+                    <input type="submit" class="btn btn-success" name="" value="SUBMIT">
+                    <a href="user_list.php" class="btn btn-warning">Back</a>
+                  </div>
                 </form>
+              </div>
             </div>
+            <!-- /.card -->
+          </div>
         </div>
-
-</body>
-</html>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+  <?php include('footer.html')?>

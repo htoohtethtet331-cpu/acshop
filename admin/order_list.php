@@ -9,6 +9,9 @@ if(empty($_SESSION['user_id'])|| empty($_SESSION['logged_in'])){
   header("Location: login.php");
 }
 
+if($_SESSION['role'] != 1 ){
+   header("Location: login.php");
+}
 
   
 
@@ -28,7 +31,7 @@ if(empty($_SESSION['user_id'])|| empty($_SESSION['logged_in'])){
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Categories Listing </h3>
+                <h3 class="card-title">Order Listings </h3>
               </div>
               <!-- /.card-header -->
 <?php 
@@ -50,14 +53,11 @@ if(empty($_SESSION['user_id'])|| empty($_SESSION['logged_in'])){
               $stmt = $pdo->prepare("SELECT * From sale_orders Order by id desc LIMIT $offset,$numberOfrec");
               $stmt->execute();
               $result = $stmt->fetchAll();
-             
-
-             
-
+      
                ?>
               <div class="card-body">
                 <div>
-                <a href="cat_add.php" type="button" class="btn btn-success">add new categories</a>
+                <a href="cat_add.php" type="button" class="btn btn-success">add new Order</a>
 
 
               </div>

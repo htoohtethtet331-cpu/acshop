@@ -33,6 +33,14 @@ if($_POST){
    
 }
 else{
+  if(is_numeric($_POST['price']) != 1){
+    $priceError = "Price should be integer";
+  };
+  if(is_numeric($_POST['quantity']) != 1){
+    $priceError = "Quantity should be integer";
+  };
+  if($quanErr == '' && $priceError == ''){
+
   if($_FILES['image']['name'] != null ){
       //valitations is success
        $file = 'image/'.($_FILES['image']['name']);
@@ -54,7 +62,7 @@ else{
  move_uploaded_file($_FILES['image']['tmp_name'],$file);
 
   $stmt = $pdo->prepare("UPDATE products set name=:name,description=:description,category_id=:category,
-  price=:price,quantity=:quantity,image=:image Where id=$id");
+  price=:price,quantity=:quantity,image=:image Where id=:id");
   $result = $stmt->execute(
     [
         ':name' => $name,
@@ -62,7 +70,8 @@ else{
         ':category' => $category,
         ':quantity' => $quantity,
         ':price' => $price,
-        ':image' => $image
+        ':image' => $image,
+        ':id' => $id
     ]
     );
     if($result){
@@ -80,23 +89,23 @@ else{
  $id = $_POST['id'];
 
   $stmt = $pdo->prepare("UPDATE products set name=:name,description=:description,category_id=:category,
-  price=:price,quantity=:quantity where id=$id");
+  price=:price,quantity=:quantity where id=:id");
   $result = $stmt->execute(
     [
         ':name' => $name,
         ':description' => $description,
         ':category' => $category,
         ':quantity' => $quantity,
-        ':price' => $price
-    
+        ':price' => $price,
+        ':id' => $id
+         
     ]
     );
     if($result){
             echo "<script>alert('Product  is added');window.location.href='index.php'</script>";
 
     }
-}
-}}
+}}}}
 $stmt=$pdo->prepare("SELECT * FROM products WHERE id=".$_GET['id']);
 $stmt->execute();
 $get = $stmt->fetchAll();
@@ -112,7 +121,7 @@ $get = $stmt->fetchAll();
           <div class="col-md-12">
             <div class="card">
               <div class="card-body">
-           <form action="product_edit.php" method="post" enctype="multipart/form-data">
+           <form action="" method="post" enctype="multipart/form-data">
              
              <input type="hidden" name="_token" value="<?php  echo $_SESSION['_token']; ?>">
              <input type="hidden" name="id" value="<?php echo $get[0]['id'] ?>">
@@ -149,12 +158,12 @@ $catResult = $catstmt->fetchAll();
 </div>
 <div class="form-group">
     <label for="">Quantity</label><p style="color : red ;"><?php  echo empty($quanErr) ? '' : $quanErr ; ?></p>
-    <input type="number" class='form-control' name="quantity" value ="<?php echo escape($get[0]['quantity'] )?>">
+    <input type="text" class='form-control' name="quantity" value ="<?php echo escape($get[0]['quantity'] )?>">
 </div>
   
 <div class="form-group">
     <label for="">Price</label><p style="color : red ;"><?php  echo empty($priceError) ? '' : $priceError ; ?></p>
-    <input type="number" class='form-control' name="price" value ="<?php echo escape($get[0]['price'] )?>">
+    <input type="text" class='form-control' name="price" value ="<?php echo escape($get[0]['price'] )?>">
 </div>
 <div class="form-group">
     <label for="">Image</label><p style="color : red ;">
@@ -165,7 +174,7 @@ $catResult = $catstmt->fetchAll();
 </div>
 
  <div class="form-group">
-  <input type="submit"  value = "ADD" class='btn btn-success'>
+  <input type="submit"  value = "Edit" class='btn btn-success'>
   <a href="index.php" class='btn btn-warning'>Back</a>
  </div>
            </form>

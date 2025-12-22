@@ -5595,14 +5595,17 @@ button.close {
     z-index: 1050;
     display: none;
     overflow: hidden;
-    outline: 0
+    outline: 0 ;
+    
 }
 
 .modal-dialog {
     position: relative;
     width: auto;
     margin: .5rem;
-    pointer-events: none
+    pointer-events: none;
+    animation: name duration timing-function delay iteration-count direction fill-mode;
+    
 }
 
 .modal.fade .modal-dialog {
@@ -5611,6 +5614,7 @@ button.close {
     transition: transform .3s ease-out, -webkit-transform .3s ease-out;
     -webkit-transform: translate(0, -25%);
     transform: translate(0, -25%)
+    
 }
 
 @media screen and (prefers-reduced-motion:reduce) {

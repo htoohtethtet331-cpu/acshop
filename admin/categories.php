@@ -9,6 +9,9 @@ if(empty($_SESSION['user_id'])|| empty($_SESSION['logged_in'])){
   header("Location: login.php");
 }
 
+if($_SESSION['role'] != 1 ){
+   header("Location: login.php");
+}
 
   
     if(!empty($_POST['search'])){
@@ -61,7 +64,7 @@ if(empty($_POST['search']) && empty($_COOKIE['search'])){
               $result = $stmt->fetchAll();
              
 }else{
-             $searchKey = $_POST['search'] ? $_POST['search'] : $_COOKIE['search'];
+             $searchKey = isset($_POST['search']) ? $_POST['search'] : $_COOKIE['search'];
 
                $stmt = $pdo->prepare("SELECT * FROM categories Where name like '%$searchKey%' Order by id DESC");
              

@@ -34,6 +34,16 @@ if($_POST){
 }
 
 else{
+  if(is_numeric($_POST['price']) != 1){
+    $priceError = "Price should be integer";
+     };
+  if(is_numeric($_POST['quantity']) != 1){
+    $quanErr = "quantity should be integer";
+     };
+     if($quanErr == '' && $priceError == '' ){
+    
+     
+
     //valitations is success
        $file = 'image/'.($_FILES['image']['name']);
      $imageType = pathinfo($file, PATHINFO_EXTENSION);
@@ -68,7 +78,7 @@ else{
 
     }
 }
-}}
+}}}
 ?>
 <?php include("header.php") ?>
 
@@ -117,12 +127,12 @@ $catResult = $catstmt->fetchAll();
 </div>
 <div class="form-group">
     <label for="">Quantity</label><p style="color : red ;"><?php  echo empty($quanErr) ? '' : $quanErr ; ?></p>
-    <input type="number" class='form-control' name="quantity" value ="">
+    <input type="text" class='form-control' name="quantity" value ="">
 </div>
   
 <div class="form-group">
     <label for="">Price</label><p style="color : red ;"><?php  echo empty($priceError) ? '' : $priceError ; ?></p>
-    <input type="number" class='form-control' name="price" value ="">
+    <input type="text" class='form-control' name="price" value ="">
 </div>
 <div class="form-group">
     <label for="">Image</label><p style="color : red ;">

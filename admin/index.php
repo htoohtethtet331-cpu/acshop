@@ -5,12 +5,16 @@ require "../config/common.php";
 
 
 
-if(empty($_SESSION['user_id'])|| empty($_SESSION['logged_in'])){
+if(empty($_SESSION['user_id'])  || empty($_SESSION['logged_in'])){
   header("Location: login.php");
+  die();
 
 
+}
 
-  
+if($_SESSION['role'] != 1 ){
+  header("Location: login.php");
+  exit();
     if(!empty($_POST['search'])){
         setcookie('search', $_POST['search'], time() + (86400 * 30), "/"); // 86400 = 1 day
     }else{
@@ -21,6 +25,7 @@ if(empty($_SESSION['user_id'])|| empty($_SESSION['logged_in'])){
     }
 };
 ?>
+ 
 
 <?php include "header.php"?>
     
@@ -61,7 +66,7 @@ if(empty($_POST['search']) && empty($_COOKIE['search'])){
               $result = $stmt->fetchAll();
              
 }else{
-             $searchKey = $_POST['search'] ? $_POST['search'] : $_COOKIE['search'];
+             $searchKey = isset($_POST['search']) ? $_POST['search'] : $_COOKIE['search'];
 
                $stmt = $pdo->prepare("SELECT * FROM products Where name like '%$searchKey%' Order by id DESC");
              
@@ -157,7 +162,6 @@ if(empty($_POST['search']) && empty($_COOKIE['search'])){
   </ul>
 </nav>
  
-
 
  
 

@@ -6,6 +6,10 @@ require "../config/common.php";
 if(empty($_SESSION['user_id']) || empty($_SESSION['logged_in']) ){
     header("location: login.php");
 }
+
+if($_SESSION['role'] != 1 ){
+   header("Location: login.php");
+}
   
 if($_POST){
     if(empty($_POST['name']) || empty($_POST['description'] )){
@@ -58,7 +62,7 @@ if($_POST){
   
  <div class="form-group">
   <input type="submit"  value = "ADD" class='btn btn-success'>
-  <a href="index.php" class='btn btn-warning'>Back</a>
+  <a href="categories.php" class='btn btn-warning'>Back</a>
  </div>
            </form>
              </div>

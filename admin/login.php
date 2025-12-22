@@ -3,6 +3,7 @@ session_start();
 require "../config/config.php";
 require "../config/common.php";
 
+
      
 if($_POST){
     $email = $_POST['email'];
@@ -32,7 +33,7 @@ if($_POST){
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | Log in</title>
+  <title>Admin Log in</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -55,7 +56,7 @@ if($_POST){
   <!-- /.login-logo -->
   <div class="card">
     <div class="card-body login-card-body">
-      <p class="login-box-msg">Sign in to start your session</p>
+      <p class="login-box-msg">Sign in to start</p>
 
       <form action="login.php"  method="post">
        <input type="hidden" name="_token" value="<?php echo $_SESSION['_token']; ?>">
